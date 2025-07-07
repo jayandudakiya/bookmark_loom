@@ -31,7 +31,7 @@ export const fetchProfileThunk = createAsyncThunk<ProfileResponse, void>(
 export const updateProfileThunk = createAsyncThunk<
   UpdateProfileResponse,
   UpdateProfilePayload
->('profile/update', async (payload, { rejectWithValue }) => {
+>('profile/update', async (_payload, { rejectWithValue }) => {
   try {
     const data = {} as UpdateProfileResponse;
     return data;

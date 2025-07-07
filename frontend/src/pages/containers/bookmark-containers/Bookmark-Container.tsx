@@ -19,8 +19,8 @@ const BookmarkContainer = () => {
   const [editingBookmark, setEditingBookmark] = useState<Bookmark | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [user, setUser] = useState<Profile>({
-    user_name: 'John Doe',
-    email: 'john.doe@example.com',
+    user_name: '',
+    email: '',
     isDeleted: false,
   });
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
@@ -32,6 +32,14 @@ const BookmarkContainer = () => {
     category: '',
     description: '',
   });
+
+  useEffect(() => {
+    setUser({
+      user_name: 'John Doe',
+      email: 'john.doe@example.com',
+      isDeleted: false,
+    });
+  }, []);
 
   // Load bookmarks from localStorage on mount
   useEffect(() => {
