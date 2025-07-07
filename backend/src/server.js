@@ -13,7 +13,7 @@ const morgan = require('morgan');
 
 // CORS options
 const corsOptions = {
-  origin: ['http://localhost:5173', 'https://links-loom.vercel.app'], // your allowed origins
+  origin: ['http://localhost:5173', 'https://bookmark-loom.vercel.app'], // your allowed origins
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true, // if you're using cookies or authentication
