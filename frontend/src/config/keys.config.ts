@@ -1,5 +1,5 @@
 const LOCAL_SETTING_KEYS = {
-  UI_THEME: 'theme',
+  UI_THEME: 'ui_theme',
 };
 
 const LOCAL_AUTH_KEYS = {

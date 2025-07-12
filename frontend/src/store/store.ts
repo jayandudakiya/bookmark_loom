@@ -1,12 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './slices/auth';
 import profileReducer from './slices/user';
+import bookmarkReducer from './slices/bookmark.slice';
 import resetStoreMiddleware from '@/store/middleware/resetStoreMiddleware';
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     profile: profileReducer,
+    bookmark: bookmarkReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(resetStoreMiddleware),

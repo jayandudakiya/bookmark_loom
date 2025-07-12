@@ -1,8 +1,8 @@
 import { type ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
-import { AppSidebar } from '@/components/AppSidebar';
 import { useAuthContext } from '@/context/auth/auth-context';
 import { Auth_Status } from '@/types/auth';
+import { Header } from '@/components/bookmark/header';
 
 const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   const { auth_status } = useAuthContext();
@@ -13,8 +13,13 @@ const ProtectedRoute = ({ children }: { children: ReactNode }) => {
 
   return (
     <>
-      <AppSidebar />
-      <main className="p-2 w-full">{children}</main>
+      <Header
+        isDarkMode={false}
+        onToggleDarkMode={() => {}}
+        // profile={user}
+        // onLogout={handleLogout}
+      />
+      {children}
     </>
   );
 };

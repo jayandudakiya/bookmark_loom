@@ -1,24 +1,26 @@
 import type { API_RESPONSE_STATUS } from '@/types/auth';
 
-export interface Bookmark {
+export type Bookmark = {
   _id: string;
   name: string;
   url: string;
   category: string;
   description: string;
   createdAt: Date;
-}
+  is_favorite?: boolean;
+};
 
 export interface CreateBookMarkPayload {
   name: string;
   url: string;
   category: string;
-  description: string;
+  description?: string;
 }
 
 export interface CreateBookMarkResponse {
   status: API_RESPONSE_STATUS;
   message?: string;
+  bookmark?: Bookmark;
 }
 
 export interface FetchBookMarkResponse {
@@ -28,16 +30,18 @@ export interface FetchBookMarkResponse {
 }
 
 export interface UpdateBookMarkPayload {
-  name: string;
-  url: string;
-  category: string;
-  description: string;
   _id: string;
+  name?: string;
+  url?: string;
+  category?: string;
+  description?: string;
+  is_favorite?: boolean;
 }
 
 export interface UpdateBookMarkResponse {
   status: API_RESPONSE_STATUS;
   message?: string;
+  updatedBookmark?: Bookmark;
 }
 
 export interface DeleteBookMarkPayload {
@@ -47,6 +51,7 @@ export interface DeleteBookMarkPayload {
 export interface DeleteBookMarkResponse {
   status: API_RESPONSE_STATUS;
   message?: string;
+  deletedBookmark_id?: string;
 }
 
 export interface BookmarkForm {
@@ -67,3 +72,7 @@ export const categories = [
   'Tools',
   'Other',
 ];
+export interface APIError {
+  message?: string;
+  status?: API_RESPONSE_STATUS;
+}

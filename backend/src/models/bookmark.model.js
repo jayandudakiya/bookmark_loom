@@ -31,5 +31,6 @@ const bookmarkSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+bookmarkSchema.index({ url: 1, created_by_id: 1 }, { unique: true });
 
 module.exports = mongoose.model('bookmarks', bookmarkSchema);

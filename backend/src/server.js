@@ -6,6 +6,7 @@ const PORT = process.env.PORT || 5000;
 // Import routes
 const authRoutes = require('./routes/auth.routes');
 const userRoutes = require('./routes/user.routes');
+const bookmarkRoutes = require('./routes/bookmark.routes');
 
 // Import necessary modules
 const cors = require('cors');
@@ -29,8 +30,9 @@ app.get('/', (res, req) => {
 });
 
 // Use routes
-app.use(`${API_END_POINT_PREFIX.AUTH}`, authRoutes);
-app.use(`${API_END_POINT_PREFIX.USER}`, userRoutes);
+app.use(API_END_POINT_PREFIX.AUTH, authRoutes);
+app.use(API_END_POINT_PREFIX.USER, userRoutes);
+app.use(API_END_POINT_PREFIX.BOOKMARK, bookmarkRoutes);
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port http://localhost:${PORT}`);
 });

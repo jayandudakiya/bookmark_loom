@@ -55,7 +55,7 @@ export function BookmarkForm({
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={onSubmit} className="space-y-4">
-          <div>
+          <div className="flex flex-col gap-1.5">
             <Label htmlFor="name">Website Name</Label>
             <Input
               id="name"
@@ -63,6 +63,7 @@ export function BookmarkForm({
               onChange={(e) =>
                 onFormDataChange({ ...formData, name: e.target.value })
               }
+              autoComplete="off"
               placeholder="e.g., GitHub"
               className={formErrors.name ? 'border-destructive' : ''}
               required
@@ -73,7 +74,7 @@ export function BookmarkForm({
               </p>
             )}
           </div>
-          <div>
+          <div className="flex flex-col gap-1.5">
             <Label htmlFor="url">URL</Label>
             <Input
               id="url"
@@ -92,7 +93,7 @@ export function BookmarkForm({
               </p>
             )}
           </div>
-          <div>
+          <div className="flex flex-col gap-1.5 w-full">
             <Label htmlFor="category">Category</Label>
             <Select
               value={formData.category}
@@ -100,9 +101,10 @@ export function BookmarkForm({
                 onFormDataChange({ ...formData, category: value })
               }
               required
+              
             >
               <SelectTrigger
-                className={formErrors.category ? 'border-destructive' : ''}
+                className={formErrors.category ? 'border-destructive w-full' : 'w-full'}
               >
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
@@ -120,7 +122,7 @@ export function BookmarkForm({
               </p>
             )}
           </div>
-          <div>
+          <div className="flex flex-col gap-1.5">
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"

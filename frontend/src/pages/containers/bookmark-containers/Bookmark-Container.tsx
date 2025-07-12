@@ -4,12 +4,15 @@ import { EmptyState } from '@/components/bookmark/empty-state';
 import { Header } from '@/components/bookmark/header';
 import { SearchAndFilters } from '@/components/bookmark/search-and-filters';
 import { StatsBar } from '@/components/bookmark/stats-bar';
+import type { AppDispatch } from '@/store/store';
+import { createBookmarkThunk } from '@/store/thunk/bookmark.thunk';
 import type {
   Bookmark,
   BookmarkForm as BookmarkFromType,
 } from '@/types/bookmark';
 import type { Profile } from '@/types/user';
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 const BookmarkContainer = () => {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
@@ -32,6 +35,7 @@ const BookmarkContainer = () => {
     category: '',
     description: '',
   });
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     setUser({
@@ -112,33 +116,34 @@ const BookmarkContainer = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    if (!validateForm()) {
+    try {
+      if (editingBookmark) {
+        // Local update logic can remain for editing
+        setBookmarks(
+          bookmarks.map((bookmark) =>
+            bookmark._id === editingBookmark._id
+              ? { ...bookmark, ...formData }
+              : bookmark
+          )
+        );
+      } else {
+        const resultAction = await dispatch(createBookmarkThunk(formData));
+
+        if (createBookmarkThunk.fulfilled.match(resultAction)) {
+          const newBookmark = resultAction.payload.bookmark as Bookmark;
+          setBookmarks([newBookmark, ...bookmarks]); // update UI
+        } else if (createBookmarkThunk.rejected.match(resultAction)) {
+          console.error('Create failed:', resultAction.payload?.message);
+        }
+      }
+
+      resetForm();
+      setIsDialogOpen(false);
+    } catch (err) {
+      console.error('Submit error:', err);
+    } finally {
       setIsSubmitting(false);
-      return;
     }
-
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    if (editingBookmark) {
-      setBookmarks(
-        bookmarks.map((bookmark) =>
-          bookmark._id === editingBookmark._id
-            ? { ...bookmark, ...formData }
-            : bookmark
-        )
-      );
-    } else {
-      const newBookmark: Bookmark = {
-        _id: Date.now().toString(),
-        ...formData,
-        createdAt: new Date(),
-      };
-      setBookmarks([newBookmark, ...bookmarks]);
-    }
-
-    resetForm();
-    setIsDialogOpen(false);
-    setIsSubmitting(false);
   };
 
   const handleEdit = (bookmark: Bookmark) => {
@@ -178,14 +183,7 @@ const BookmarkContainer = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="pt-16 lg:pt-0">
-        <div className="w-full px-4 lg:px-6 lg:py-8 max-w-none">
-          <Header
-            isDarkMode={isDarkMode}
-            onToggleDarkMode={toggleDarkMode}
-            profile={user}
-            onLogout={handleLogout}
-          />
-
+        <div className="w-full p-5 lg:px-6 lg:py-[70px] max-w-none">
           <SearchAndFilters
             searchTerm={searchTerm}
             onSearchChange={setSearchTerm}
@@ -194,33 +192,35 @@ const BookmarkContainer = () => {
             onAddBookmark={handleAddBookmark}
           />
 
-          <StatsBar
-            totalBookmarks={bookmarks.length}
-            filteredCount={filteredBookmarks.length}
-            searchTerm={searchTerm}
-            selectedCategory={selectedCategory}
-          />
-
-          {filteredBookmarks.length === 0 ? (
-            <EmptyState
+          <div className="flex flex-col gap-3">
+            <StatsBar
               totalBookmarks={bookmarks.length}
-              onAddBookmark={handleAddBookmark}
+              filteredCount={filteredBookmarks.length}
+              searchTerm={searchTerm}
+              selectedCategory={selectedCategory}
             />
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
-              {filteredBookmarks.map((bookmark, index) => (
-                <BookmarkCard
-                  key={bookmark._id}
-                  bookmark={bookmark}
-                  index={index}
-                  copiedId={copiedId}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
-                  onCopyLink={handleCopyLink}
-                />
-              ))}
-            </div>
-          )}
+
+            {filteredBookmarks.length === 0 ? (
+              <EmptyState
+                totalBookmarks={bookmarks.length}
+                onAddBookmark={handleAddBookmark}
+              />
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+                {filteredBookmarks.map((bookmark, index) => (
+                  <BookmarkCard
+                    key={bookmark._id}
+                    bookmark={bookmark}
+                    index={index}
+                    copiedId={copiedId}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                    onCopyLink={handleCopyLink}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
 
           <BookmarkForm
             isOpen={isDialogOpen}

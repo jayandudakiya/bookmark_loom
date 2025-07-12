@@ -27,7 +27,7 @@ export function SearchAndFilters({
 }: SearchAndFiltersProps) {
   return (
     <div
-      className="flex flex-col gap-4 mb-8 animate-slide-in-up"
+      className="flex flex-col gap-4 mb-8 animate-slide-in-up w-full"
       style={{ animationDelay: '0.1s' }}
     >
       <div className="flex flex-col lg:flex-row gap-4">
@@ -41,7 +41,7 @@ export function SearchAndFilters({
           />
         </div>
         <Select value={selectedCategory} onValueChange={onCategoryChange}>
-          <SelectTrigger className="w-full lg:w-64 h-12 border-2 focus:border-primary/50 transition-all duration-300">
+          <SelectTrigger className="w-full lg:w-64 min-h-12 border-2 focus:border-primary/50 transition-all duration-300">
             <SelectValue placeholder="All Categories" />
           </SelectTrigger>
           <SelectContent>

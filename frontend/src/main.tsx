@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client';
 import './styles/globals.css';
 import App from './App.tsx';
 import { BrowserRouter } from 'react-router-dom';
-import { SidebarProvider } from '@/components/ui/sidebar.tsx';
 import { AuthProvider } from '@/context/auth/Auth-Provider.tsx';
 import { Toaster } from 'sonner';
 import ThemeProvider from '@/context/theme/Theme-provider.tsx';
@@ -16,9 +15,7 @@ createRoot(document.getElementById('root')!).render(
       <Provider store={store}>
         <ThemeProvider>
           <AuthProvider>
-            <SidebarProvider>
-              <App />
-            </SidebarProvider>
+            <App />
           </AuthProvider>
         </ThemeProvider>
         <Toaster />
