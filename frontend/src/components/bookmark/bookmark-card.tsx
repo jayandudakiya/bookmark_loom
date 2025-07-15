@@ -25,6 +25,10 @@ import { ReactComponent as BookmarkVisitIcon } from '@/assets/icons/bookmarks/bo
 import { ReactComponent as BookmarkEditIcon } from '@/assets/icons/bookmarks/bookmark-edit.svg';
 import { ReactComponent as BookmarkRemoveIcon } from '@/assets/icons/bookmarks/bookmark-remove.svg';
 import { ReactComponent as FavoriteIcon } from '@/assets/icons/favorite/favorite.svg';
+import type { RootState } from '@/store/store';
+import { useSelector } from 'react-redux';
+import { useState } from 'react';
+
 interface BookmarkCardProps {
   bookmark: Bookmark;
   index: number;
@@ -33,6 +37,8 @@ interface BookmarkCardProps {
   onDelete: (id: string) => void;
   onCopyLink: (url: string, id: string) => void;
   onToggleFavorite: (bookmark: Bookmark) => void;
+  isUpdating: boolean;
+  isDeleting: boolean;
 }
 
 export function BookmarkCard({
@@ -42,7 +48,9 @@ export function BookmarkCard({
   onEdit,
   onDelete,
   onCopyLink,
-  onToggleFavorite
+  onToggleFavorite,
+  isDeleting,
+  isUpdating,
 }: BookmarkCardProps) {
   const getCategoryColor = (category: string) => {
     const colors: { [key: string]: string } = {
@@ -65,10 +73,18 @@ export function BookmarkCard({
     };
     return colors[category] || colors['Other'];
   };
+  const { isDeletingLoading, isUpdateLoading } = useSelector(
+    (state: RootState) => state.bookmark
+  );
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
     <Card
-      className="group col-span-2  hover:shadow-2xl transition-all duration-300 bg-card border-2 hover:border-primary/30 backdrop-blur-sm hover:scale-[1.02] animate-slide-in-up"
+      className={`group col-span-2 hover:shadow-2xl transition-all duration-300 bg-card border-2 hover:border-primary/30 backdrop-blur-sm hover:scale-[1.02] animate-slide-in-up ${
+        isUpdating || isDeleting || isDeletingLoading || isUpdateLoading
+          ? 'opacity-60 pointer-events-none'
+          : ''
+      }`}
       style={{ animationDelay: `${0.1 + index * 0.05}s` }}
     >
       <CardHeader className=" flex flex-col gap-3 items-start justify-between flex-wrap">
@@ -104,7 +120,7 @@ export function BookmarkCard({
           </p>
         )}
         <div className="flex items-center justify-between gap-2">
-          <div className="flex gap-2 justify-end w-full">
+          <div className="flex gap-2 justify-center sm:justify-end w-full flex-wrap">
             <Button
               variant="outline"
               size="sm"
@@ -134,6 +150,7 @@ export function BookmarkCard({
               )}
             </Button>
             <Button
+              disabled={isUpdating}
               variant="ghost"
               size="sm"
               onClick={() => onToggleFavorite(bookmark)}
@@ -144,12 +161,17 @@ export function BookmarkCard({
               }`}
               title={bookmark.is_favorite ? 'Unfavorite' : 'Mark as Favorite'}
             >
-              <FavoriteIcon
-                className={`h-3 w-3 ${
-                  bookmark.is_favorite ? 'fill-red-500' : ''
-                }`}
-              />
+              {isUpdating ? (
+                <div className="w-4 h-4 border-2 border-t-blue-500 border-gray-300 rounded-full animate-spin"></div>
+              ) : (
+                <FavoriteIcon
+                  className={`h-3 w-3 ${
+                    bookmark.is_favorite ? 'fill-red-500' : ''
+                  }`}
+                />
+              )}
             </Button>
+
             <Button
               variant="ghost"
               size="sm"
@@ -159,15 +181,20 @@ export function BookmarkCard({
             >
               <BookmarkEditIcon className="h-3 w-3" />
             </Button>
-            <AlertDialog>
+            <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <AlertDialogTrigger asChild>
                 <Button
                   variant="ghost"
                   size="sm"
                   title="Delete url"
                   className="hover:bg-red-100 hover:text-red-700 dark:hover:bg-red-900 dark:hover:text-red-300 transition-all hover:scale-110"
+                  onClick={() => setIsDialogOpen(true)}
                 >
-                  <BookmarkRemoveIcon className="h-3 w-3" />
+                  {isDeleting ? (
+                    <div className="w-4 h-4 border-2 border-t-blue-500 border-gray-300 rounded-full animate-spin"></div>
+                  ) : (
+                    <BookmarkRemoveIcon className="h-3 w-3" />
+                  )}
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent className="animate-scale-in">
@@ -179,12 +206,26 @@ export function BookmarkCard({
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogCancel disabled={isDeleting}>
+                    Cancel
+                  </AlertDialogCancel>
                   <AlertDialogAction
-                    onClick={() => onDelete(bookmark._id)}
+                    onClick={async () => {
+                      try {
+                        await onDelete(bookmark._id);
+                        setIsDialogOpen(false); // ✅ close on success
+                      } catch (error) {
+                        console.log('error', error);
+                      }
+                    }}
                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    disabled={isDeleting}
                   >
-                    Delete
+                    {isDeleting ? (
+                      <div className="w-4 h-4 border-2 border-t-red-600 border-gray-300 rounded-full animate-spin mx-auto" />
+                    ) : (
+                      'Delete'
+                    )}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>

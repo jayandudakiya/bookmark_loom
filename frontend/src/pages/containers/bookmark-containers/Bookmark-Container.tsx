@@ -7,6 +7,7 @@ import {
 import { EmptyState } from '@/components/bookmark/empty-state';
 import { SearchAndFilters } from '@/components/bookmark/search-and-filters';
 import { StatsBar } from '@/components/bookmark/stats-bar';
+import { Skeleton } from '@/components/ui/skeleton';
 import type { AppDispatch, RootState } from '@/store/store';
 import {
   createBookmarkThunk,
@@ -31,7 +32,12 @@ const BookmarkContainer = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingBookmark, setEditingBookmark] = useState<Bookmark | null>(null);
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
-
+  const [updatingBookmarkId, setUpdatingBookmarkId] = useState<string | null>(
+    null
+  );
+  const [deletingBookmarkId, setDeletingBookmarkId] = useState<string | null>(
+    null
+  );
 
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -79,7 +85,6 @@ const BookmarkContainer = () => {
   };
 
   const handleSubmit = async (data: BookmarkFormSchema) => {
-    console.log('➡ ~ handleSubmit ~ data:', data);
     setIsSubmitting(true);
 
     try {
@@ -104,8 +109,6 @@ const BookmarkContainer = () => {
         const resultAction = await dispatch(createBookmarkThunk(data));
 
         if (createBookmarkThunk.fulfilled.match(resultAction)) {
-          const newBookmark = resultAction.payload.bookmark as Bookmark;
-          console.log('➡ ~ handleSubmit ~ newBookmark:', newBookmark);
           toast.success(
             resultAction.payload.message || 'Bookmark created successfully!'
           );
@@ -119,7 +122,7 @@ const BookmarkContainer = () => {
 
       resetForm();
       setIsDialogOpen(false);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error('Submit error:', err);
       toast.error(err.message || 'An unexpected error occurred.');
@@ -144,7 +147,7 @@ const BookmarkContainer = () => {
       toast.error('_id is required to delete bookmark');
       return;
     }
-
+    setDeletingBookmarkId(_id);
     try {
       const resultAction = await dispatch(deleteBookmarkThunk({ _id }));
 
@@ -160,6 +163,8 @@ const BookmarkContainer = () => {
     } catch (err: any) {
       console.error('Delete failed:', err);
       toast.error(err.message || 'An unexpected error occurred.');
+    } finally {
+      setDeletingBookmarkId(null);
     }
   };
 
@@ -176,6 +181,7 @@ const BookmarkContainer = () => {
   };
 
   const handleToggleFavorite = async (bookmark: Bookmark) => {
+    setUpdatingBookmarkId(bookmark._id);
     try {
       const resultAction = await dispatch(
         updateBookmarksThunk({
@@ -199,6 +205,8 @@ const BookmarkContainer = () => {
     } catch (err: any) {
       console.error('Favorite toggle failed:', err);
       toast.error(err.message || 'An unexpected error occurred.');
+    } finally {
+      setUpdatingBookmarkId(null);
     }
   };
 
@@ -230,7 +238,11 @@ const BookmarkContainer = () => {
             />
 
             {isLoading ? (
-              <> loading Bookmarks </>
+              <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 grid-rows-4 gap-4">
+                {[1, 2, 3].map((num) => {
+                  return <Skeleton className="col-span-2 h-44" key={num} />;
+                })}
+              </div>
             ) : filteredBookmarks && filteredBookmarks.length === 0 ? (
               <EmptyState
                 totalBookmarks={bookmarks.length}
@@ -249,6 +261,8 @@ const BookmarkContainer = () => {
                       onDelete={handleDelete}
                       onCopyLink={handleCopyLink}
                       onToggleFavorite={handleToggleFavorite}
+                      isDeleting={deletingBookmarkId === bookmark._id}
+                      isUpdating={updatingBookmarkId === bookmark._id}
                     />
                   ))}
               </div>
@@ -257,7 +271,10 @@ const BookmarkContainer = () => {
 
           <BookmarkForm
             isOpen={isDialogOpen}
-            onClose={() => setIsDialogOpen(false)}
+            onClose={() => {
+              setIsDialogOpen(false);
+              setEditingBookmark(null);
+            }}
             editingBookmark={editingBookmark}
             formData={formData}
             onFormDataChange={setFormData}

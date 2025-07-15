@@ -63,7 +63,7 @@ export function BookmarkForm({
 }: BookmarkFormProps) {
   const form = useForm<BookmarkFormSchema>({
     resolver: zodResolver(bookmarkSchema),
-    defaultValues: editingBookmark ?? {
+    defaultValues: {
       name: '',
       url: '',
       category: '',
@@ -76,11 +76,23 @@ export function BookmarkForm({
     if (editingBookmark) {
       form.reset(editingBookmark);
     } else {
-      form.reset();
+      form.reset({
+        name: '',
+        url: '',
+        category: '',
+        description: '',
+      });
     }
   }, [editingBookmark, isOpen, form]);
+    console.log('➡ ~ useEffect ~ editingBookmark:', editingBookmark)
+
+  const handelOnClose = () => {
+    onClose();
+    form.reset();
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handelOnClose}>
       <DialogContent
         className="sm:max-w-md animate-scale-in"
         onInteractOutside={(e) => e.preventDefault()}
