@@ -22,12 +22,14 @@ import type {
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'sonner';
+import Papa from 'papaparse';
 
 const BookmarkContainer = () => {
   const { bookmarks, isLoading } = useSelector(
     (state: RootState) => state.bookmark
   );
   const [searchTerm, setSearchTerm] = useState('');
+  const [isDownloading, setIsDownloading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingBookmark, setEditingBookmark] = useState<Bookmark | null>(null);
@@ -215,7 +217,38 @@ const BookmarkContainer = () => {
     setIsDialogOpen(true);
   };
 
-  // console.log('handleSearchChange', handleSearchChange);
+  const downloadBookmarksCSV = ({
+    filename = 'bookmarks.csv',
+  }: {
+    bookmarksData?: Bookmark[];
+    filename?: string;
+  }) => {
+    setIsDownloading(true);
+
+    const dataWithIndex = bookmarks?.map((bookmark, index) => ({
+      Index: index + 1,
+      ID: bookmark._id,
+      Name: bookmark.name,
+      URL: bookmark.url,
+      Category: bookmark.category,
+      Description: bookmark.description,
+      CreatedAt: new Date(bookmark.createdAt).toISOString(),
+      Favorite: bookmark.is_favorite ? 'Yes' : 'No',
+    }));
+
+    const csv = Papa.unparse(dataWithIndex || []);
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    setIsDownloading(false);
+    toast.success('Bookmarks downloaded successfully!');
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -229,6 +262,8 @@ const BookmarkContainer = () => {
             onAddBookmark={handleAddBookmark}
             showFavoritesOnly={showFavoritesOnly} // ✅
             onToggleFavorites={setShowFavoritesOnly} // ✅
+            downloadBookmarksCSV={downloadBookmarksCSV} // ✅
+            isDownloading={isDownloading} // ✅
           />
 
           <div className="flex flex-col gap-3">

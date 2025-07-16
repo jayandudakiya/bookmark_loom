@@ -7,8 +7,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { categories } from '@/types/bookmark';
-import { Search } from 'lucide-react';
+import { categories, type Bookmark } from '@/types/bookmark';
+import { Download, Search } from 'lucide-react';
 import { ReactComponent as BookmarkAddIcon } from '@/assets/icons/bookmarks/bookmark-add.svg';
 import { ReactComponent as FavoriteIcon } from '@/assets/icons/favorite/favorite.svg';
 
@@ -20,6 +20,14 @@ interface SearchAndFiltersProps {
   onAddBookmark: () => void;
   showFavoritesOnly: boolean; // ✅ NEW
   onToggleFavorites: React.Dispatch<React.SetStateAction<boolean>>; // ✅ NEW
+  downloadBookmarksCSV?: ({
+    bookmarksData,
+    filename,
+  }: {
+    bookmarksData?: Bookmark[];
+    filename?: string;
+  }) => void; // ✅ NEW
+  isDownloading: boolean; // ✅ NEW
 }
 
 export function SearchAndFilters({
@@ -30,6 +38,8 @@ export function SearchAndFilters({
   onAddBookmark,
   onToggleFavorites,
   showFavoritesOnly,
+  downloadBookmarksCSV,
+  isDownloading,
 }: SearchAndFiltersProps) {
   const handleOnSearchChange = (value: string) => {
     onSearchChange(value);
@@ -42,7 +52,7 @@ export function SearchAndFilters({
     if (value !== 'all') {
       onSearchChange(''); // Reset search term when category changes
     }
-    onToggleFavorites(false)
+    onToggleFavorites(false);
   };
 
   const handleOnToggleFavorites = () => {
@@ -89,11 +99,23 @@ export function SearchAndFilters({
             onClick={handleOnToggleFavorites}
             className="h-11  w-14 whitespace-nowrap"
           >
-            {showFavoritesOnly ? (
-              <FavoriteIcon className="fill-red-400" />
-            ) : (
-              <FavoriteIcon />
-            )}
+            <FavoriteIcon
+              className={`${
+                showFavoritesOnly ? 'fill-red-400 animate-pulse' : ''
+              }`}
+            />
+          </Button>
+          <Button
+            disabled={isDownloading}
+            variant={showFavoritesOnly ? 'secondary' : 'outline'}
+            onClick={() => downloadBookmarksCSV && downloadBookmarksCSV({})}
+            className="h-11  w-14 whitespace-nowrap"
+          >
+            <Download
+              className={`stroke-zinc-950 dark:stroke-zinc-50 ${
+                isDownloading ? 'animate-ping' : ''
+              }`}
+            />
           </Button>
         </div>
       </div>
