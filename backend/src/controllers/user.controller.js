@@ -51,7 +51,7 @@ const updateUserProfile = async (req, res) => {
     const updateBody = req.body;
 
     //  Prevent updates to restricted fields
-    const restrictedFields = ['email', 'user_name', 'password', 'isDeleted'];
+    const restrictedFields = [ 'password', 'isDeleted'];
     const attemptedRestrictedUpdates = restrictedFields.filter((field) =>
       Object.prototype.hasOwnProperty.call(updateBody, field)
     );

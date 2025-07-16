@@ -1,10 +1,10 @@
-const { API_STATUS } = require("../config/api");
-const useUserService = require("../services/user.service");
+const { API_STATUS } = require('../config/api');
+const useUserService = require('../services/user.service');
 const {
   deleteUserWithDependencies,
-} = require("../services/userCleanup.service");
-const { comparePassword, hashPassword } = require("../utils/hash");
-const { generateToken } = require("../utils/jwt");
+} = require('../services/userCleanup.service');
+const { comparePassword, hashPassword } = require('../utils/hash');
+const { generateToken } = require('../utils/jwt');
 
 const register = async (req, res) => {
   try {
@@ -14,7 +14,7 @@ const register = async (req, res) => {
     if (!user_name || !email || !password) {
       return res.status(400).json({
         status: API_STATUS.FAIL,
-        message: "Full name, email, and password are required.",
+        message: 'Full name, email, and password are required.',
       });
     }
 
@@ -29,7 +29,7 @@ const register = async (req, res) => {
     if (existingUser) {
       return res.status(409).json({
         status: API_STATUS.FAIL,
-        message: "A user with this email already exists.",
+        message: 'A user with this email already exists.',
       });
     }
 
@@ -45,7 +45,7 @@ const register = async (req, res) => {
     if (!newUser) {
       return res.status(500).json({
         status: API_STATUS.ERROR,
-        message: "Something went wrong while creating the user.",
+        message: 'Something went wrong while creating the user.',
       });
     }
 
@@ -58,20 +58,20 @@ const register = async (req, res) => {
     if (!token) {
       return res.status(500).json({
         status: API_STATUS.ERROR,
-        message: "Failed to generate authentication token.",
+        message: 'Failed to generate authentication token.',
       });
     }
 
     return res.status(201).json({
       status: API_STATUS.SUCCESS,
-      message: "User created successfully.",
+      message: 'User created successfully.',
       token: token,
     });
   } catch (error) {
-    console.error("Error in user registration:", error);
+    console.error('Error in user registration:', error);
     return res.status(500).json({
       status: API_STATUS.ERROR,
-      message: error.message || "Internal server error.",
+      message: error.message || 'Internal server error.',
     });
   }
 };
@@ -84,7 +84,7 @@ const login = async (req, res) => {
     if (!password || (!email && !user_name)) {
       return res.status(400).json({
         status: API_STATUS.FAIL,
-        message: "Password and either email or full name are required.",
+        message: 'Password and either email or full name are required.',
       });
     }
 
@@ -99,7 +99,7 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(401).json({
         status: API_STATUS.FAIL,
-        message: "invalid full name , email Or password credentials.",
+        message: 'invalid full name , email Or password credentials.',
       });
     }
 
@@ -111,7 +111,7 @@ const login = async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({
         status: API_STATUS.FAIL,
-        message: "invalid full name , email Or password credentials.",
+        message: 'invalid full name , email Or password credentials.',
       });
     }
 
@@ -122,20 +122,20 @@ const login = async (req, res) => {
     if (!token) {
       return res.status(500).json({
         status: API_STATUS.ERROR,
-        message: "Failed to generate token.",
+        message: 'Failed to generate token.',
       });
     }
 
     return res.status(200).json({
       status: API_STATUS.SUCCESS,
-      message: "Login successful.",
+      message: 'Login successful.',
       token,
     });
   } catch (error) {
-    console.error("Login error:", error);
+    console.error('Login error:', error);
     return res.status(500).json({
       status: API_STATUS.ERROR,
-      message: error.message || "Internal server error.",
+      message: error.message || 'Internal server error.',
     });
   }
 };
@@ -143,13 +143,13 @@ const logout = async (req, res) => {
   try {
     return res.status(200).json({
       status: API_STATUS.SUCCESS,
-      message: "Logout successful.",
+      message: 'Logout successful.',
     });
   } catch (error) {
-    console.error("logout error:", error);
+    console.error('logout error:', error);
     return res.status(500).json({
       status: API_STATUS.ERROR,
-      message: error.message || "Internal server error.",
+      message: error.message || 'Internal server error.',
     });
   }
 };
@@ -162,7 +162,7 @@ const changePassword = async (req, res) => {
     if (!oldPassword || !newPassword) {
       return res.status(400).json({
         status: API_STATUS.FAIL,
-        message: "Old and new passwords are required.",
+        message: 'Old and new passwords are required.',
       });
     }
 
@@ -172,7 +172,7 @@ const changePassword = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         status: API_STATUS.FAIL,
-        message: "User not found.",
+        message: 'User not found.',
       });
     }
 
@@ -184,7 +184,7 @@ const changePassword = async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({
         status: API_STATUS.FAIL,
-        message: "Old password is incorrect.",
+        message: 'Old password is incorrect.',
       });
     }
 
@@ -197,10 +197,10 @@ const changePassword = async (req, res) => {
 
     return res.status(200).json({
       status: API_STATUS.SUCCESS,
-      message: "Password updated successfully.",
+      message: 'Password updated successfully.',
     });
   } catch (err) {
-    console.error("Change Password Error:", err.message);
+    console.error('Change Password Error:', err.message);
     return res
       .status(500)
       .json({ status: API_STATUS.ERROR, message: err.message });
@@ -215,7 +215,7 @@ const updateEmail = async (req, res) => {
     if (!newEmail) {
       return res.status(400).json({
         status: API_STATUS.FAIL,
-        message: "New email is required.",
+        message: 'New email is required.',
       });
     }
 
@@ -223,7 +223,7 @@ const updateEmail = async (req, res) => {
     if (!emailRegex.test(newEmail)) {
       return res.status(400).json({
         status: API_STATUS.FAIL,
-        message: "Invalid email format.",
+        message: 'Invalid email format.',
       });
     }
 
@@ -234,7 +234,7 @@ const updateEmail = async (req, res) => {
     if (existingUser) {
       return res.status(409).json({
         status: API_STATUS.FAIL,
-        message: "Email already in use.",
+        message: 'Email already in use.',
       });
     }
 
@@ -246,16 +246,16 @@ const updateEmail = async (req, res) => {
     if (!updatedUser) {
       return res.status(404).json({
         status: API_STATUS.FAIL,
-        message: "User not found or email update failed.",
+        message: 'User not found or email update failed.',
       });
     }
 
     return res.status(200).json({
       status: API_STATUS.SUCCESS,
-      message: "Email updated successfully.",
+      message: 'Email updated successfully.',
     });
   } catch (err) {
-    console.error("Update Email Error:", err.message);
+    console.error('Update Email Error:', err.message);
     return res
       .status(500)
       .json({ status: API_STATUS.ERROR, message: err.message });
@@ -265,23 +265,54 @@ const updateEmail = async (req, res) => {
 const deleteAccount = async (req, res) => {
   try {
     const userId = req.user?._id;
+    const { password } = req.body;
 
-    if (!userId) {
+    if (!password) {
       return res.status(400).json({
         status: API_STATUS.FAIL,
-        message: "User ID missing from request context.",
+        message: 'Password is required to delete account.',
       });
     }
 
+    if (!userId) {
+      return res.status(401).json({
+        status: API_STATUS.FAIL,
+        message: 'Unauthorized request. User ID is missing.',
+      });
+    }
+
+    const user = await useUserService.findUser({
+      filter: { _id: userId, isDeleted: false },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        status: API_STATUS.FAIL,
+        message: 'User not found.',
+      });
+    }
+
+    const isMatch = await comparePassword({
+      rawPassword: password,
+      hashedPassword: user.password,
+    });
+
+    if (!isMatch) {
+      return res.status(400).json({
+        status: API_STATUS.FAIL,
+        message: 'Incorrect password. Please try again.',
+      });
+    }
+    // 🗑️ Delete user and related data
     const result = await deleteUserWithDependencies({ userId });
 
     return res.status(200).json({
       status: API_STATUS.SUCCESS,
-      message: "Account and related data permanently deleted.",
+      message: 'Account and related data permanently deleted.',
       meta: result,
     });
   } catch (err) {
-    console.error("Delete Account Error:", err.message);
+    console.error('Delete Account Error:', err.message);
     return res
       .status(500)
       .json({ status: API_STATUS.ERROR, message: err.message });

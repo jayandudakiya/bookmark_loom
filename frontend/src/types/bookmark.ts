@@ -70,8 +70,25 @@ export const categories = [
   'Education',
   'Shopping',
   'Tools',
+  'Business',
+  'Movies',
+  'Music',
+  'Sports',
+  'Food',
+  'Lifestyle',
+  'Gaming',
+  'Science',
+  'Technology',
+  'Art',
+  'Fashion',
+  'Photography',
+  'Health',
+  'Finance',
+  'Productivity',
+  'Travel',
   'Other',
 ];
+
 export interface APIError {
   message?: string;
   status?: API_RESPONSE_STATUS;

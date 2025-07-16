@@ -15,6 +15,6 @@ authRoutes.post(`/login`, login);
 authRoutes.post(`/logout`, authenticateUser, logout);
 authRoutes.post(`/change-password`, authenticateUser, changePassword);
 authRoutes.patch(`/update-email`, authenticateUser, updateEmail);
-authRoutes.delete(`/delete-account`, authenticateUser, deleteAccount);
+authRoutes.post(`/delete-account`, authenticateUser, deleteAccount);
 
 module.exports = authRoutes;

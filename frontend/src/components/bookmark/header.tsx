@@ -60,16 +60,7 @@ export function Header() {
           </Link>
 
           <div className="flex items-center justify-end gap-3.5">
-            {auth_status === Auth_Status.LOGGED_IN ? (
-              <ul className="flex items-center gap-2">
-                {/* <li>
-                  <Link to="/favorites">Favorite</Link>
-                </li> */}
-                {/* <li>
-                  <Link to="/profile">Profile</Link>
-                </li> */}
-              </ul>
-            ) : auth_status === Auth_Status.LOGGED_OUT ? (
+            {auth_status === Auth_Status.LOGGED_OUT ? (
               <>
                 <Button onClick={onGetStarted}>Get Started</Button>
               </>
@@ -80,11 +71,11 @@ export function Header() {
                   <Skeleton className="h-[34px] w-[34px] rounded-full" />
                 </>
               ) : (
-                <>
+                <Link to="/profile">
                   <Avatar className="h-[34px] w-[34px]">
                     <AvatarFallback> {userName}</AvatarFallback>
                   </Avatar>
-                </>
+                </Link>
               )
             ) : null}
             <Button

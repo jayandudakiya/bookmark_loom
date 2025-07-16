@@ -84,7 +84,6 @@ export function BookmarkForm({
       });
     }
   }, [editingBookmark, isOpen, form]);
-    console.log('➡ ~ useEffect ~ editingBookmark:', editingBookmark)
 
   const handelOnClose = () => {
     onClose();

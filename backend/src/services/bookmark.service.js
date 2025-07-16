@@ -52,6 +52,15 @@ class BookmarkService {
       throw error;
     }
   }
+  async deleteManyBookmarks({ filter = {} }) {
+    try {
+      const result = await Bookmark.deleteMany(filter);
+      return result; // contains { deletedCount: N }
+    } catch (error) {
+      console.error('Service Error deleting many bookmarks:', error.message);
+      throw error;
+    }
+  }
 }
 
 module.exports = new BookmarkService();

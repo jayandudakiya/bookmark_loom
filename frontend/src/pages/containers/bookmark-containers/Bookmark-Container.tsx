@@ -215,6 +215,8 @@ const BookmarkContainer = () => {
     setIsDialogOpen(true);
   };
 
+  // console.log('handleSearchChange', handleSearchChange);
+
   return (
     <div className="min-h-screen bg-background">
       <div className="pt-16 lg:pt-0">
@@ -226,7 +228,7 @@ const BookmarkContainer = () => {
             onCategoryChange={setSelectedCategory}
             onAddBookmark={handleAddBookmark}
             showFavoritesOnly={showFavoritesOnly} // ✅
-            onToggleFavorites={() => setShowFavoritesOnly((prev) => !prev)} // ✅
+            onToggleFavorites={setShowFavoritesOnly} // ✅
           />
 
           <div className="flex flex-col gap-3">

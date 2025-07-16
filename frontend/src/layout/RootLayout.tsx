@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { useAuthContext } from '@/context/auth/auth-context';
 import AuthPage from '@/pages/AuthPage';
 import BookmarkPage from '@/pages/BookmarkPage';
+import ProfilePage from '@/pages/ProfilePage';
 import WelcomePage from '@/pages/welcome-page';
 import ProtectedRoute from '@/routes/components/ProtectedRoute';
 import PublicRoute from '@/routes/components/PublicRoute';
@@ -53,6 +54,14 @@ const RootLayout = () => {
           element={
             <ProtectedRoute>
               <BookmarkPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
             </ProtectedRoute>
           }
         />
