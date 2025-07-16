@@ -54,23 +54,35 @@ export function BookmarkCard({
 }: BookmarkCardProps) {
   const getCategoryColor = (category: string) => {
     const colors: { [key: string]: string } = {
-      Development:
-        'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
-      Design:
-        'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
-      News: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
-      'Social Media':
-        'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300',
-      Entertainment:
-        'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
-      Education:
-        'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
-      Shopping:
-        'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
-      Tools: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300',
-      Other:
-        'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300',
-    };
+  Development: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
+  Design: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
+  News: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
+  'Social Media': 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300',
+  Entertainment: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
+  Education: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+  Shopping: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
+  Tools: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300',
+  Other: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300',
+
+  // New categories with color suggestions
+  Business: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-300',
+  Movies: 'bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-300',
+  Music: 'bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-900 dark:text-fuchsia-300',
+  Sports: 'bg-lime-100 text-lime-800 dark:bg-lime-900 dark:text-lime-300',
+  Food: 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300',
+  Lifestyle: 'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300',
+  Gaming: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300',
+  Science: 'bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-300',
+  Technology: 'bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-300',
+  Art: 'bg-violet-100 text-violet-800 dark:bg-violet-900 dark:text-violet-300',
+  Fashion: 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300',
+  Photography: 'bg-neutral-100 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-300',
+  Health: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+  Finance: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300',
+  Productivity: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
+  Travel: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
+};
+
     return colors[category] || colors['Other'];
   };
   const { isDeletingLoading, isUpdateLoading } = useSelector(
