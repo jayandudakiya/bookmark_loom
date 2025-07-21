@@ -53,6 +53,8 @@ const usernameRegex = /^[a-zA-Z0-9_-]{2,20}$/;
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+// Regex to disallow leading/trailing spaces
+const noLeadingOrTrailingSpaces = /^\S(.*\S)?$/;
 
 // Validation schemas
 const profileSchema = z.object({
@@ -63,11 +65,17 @@ const profileSchema = z.object({
     .regex(usernameRegex, {
       message:
         'Username can only contain letters, numbers, hyphens, and underscores',
+    })
+    .regex(noLeadingOrTrailingSpaces, {
+      message: 'Username must not have leading or trailing spaces',
     }),
   email: z
     .string()
     .min(1, { message: 'Email is required' })
-    .regex(emailRegex, { message: 'Please enter a valid email address' }),
+    .regex(emailRegex, { message: 'Please enter a valid email address' })
+    .regex(noLeadingOrTrailingSpaces, {
+      message: 'Email must not have leading or trailing spaces',
+    }),
 });
 
 const passwordSchema = z
@@ -252,7 +260,7 @@ function ProfileContainer() {
       toast('Failed to delete account. Please check your password.');
       deleteAccountForm.reset();
     } finally {
-      deleteAccountForm.reset();  
+      deleteAccountForm.reset();
       setIsDeleteLoading(false);
       setDeleteDialogOpen(false);
     }

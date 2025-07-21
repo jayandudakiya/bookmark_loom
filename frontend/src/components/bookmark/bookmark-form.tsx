@@ -40,16 +40,23 @@ interface BookmarkFormProps {
   onSubmit: (data: BookmarkFormSchema) => void;
 }
 
+const noLeadingOrTrailingSpaces = /^\S(.*\S)?$/;
+const httpsUrlRegex = /^https:\/\/[^\s/$.?#].[^\s]*$/;
 const bookmarkSchema = z.object({
-  name: z.string().min(1, 'Website name is required.'),
+  name: z
+    .string()
+    .min(1, 'Website name is required.')
+    .regex(noLeadingOrTrailingSpaces, 'No leading or trailing spaces allowed.'),
   url: z
     .string()
     .url('Enter a valid URL.')
-    .regex(/^https?:\/\//, 'URL must start with http:// or https://'),
+    .regex(httpsUrlRegex, 'URL must start with https://')
+    .regex(noLeadingOrTrailingSpaces, 'No leading or trailing spaces allowed.'),
   category: z.string().min(1, 'Category is required.'),
   description: z
     .string()
     .max(200, 'Description must be at most 200 characters.')
+    .regex(noLeadingOrTrailingSpaces, 'No leading or trailing spaces allowed.')
     .optional(),
 });
 

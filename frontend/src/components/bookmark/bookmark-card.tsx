@@ -28,6 +28,11 @@ import { ReactComponent as FavoriteIcon } from '@/assets/icons/favorite/favorite
 import type { RootState } from '@/store/store';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface BookmarkCardProps {
   bookmark: Bookmark;
@@ -54,34 +59,60 @@ export function BookmarkCard({
 }: BookmarkCardProps) {
   const getCategoryColor = (category: string) => {
     const colors: { [key: string]: string } = {
-  Development: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
-  Design: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
-  News: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
-  'Social Media': 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300',
-  Entertainment: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
-  Education: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
-  Shopping: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
-  Tools: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300',
-  Other: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300',
+      Development:
+        'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800',
+      Design:
+        'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950 dark:text-purple-300 dark:border-purple-800',
+      News: 'bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-300 dark:border-red-800',
+      'Social Media':
+        'bg-pink-50 text-pink-700 border-pink-200 dark:bg-pink-950 dark:text-pink-300 dark:border-pink-800',
+      Entertainment:
+        'bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-950 dark:text-yellow-300 dark:border-yellow-800',
+      Education:
+        'bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800',
+      Shopping:
+        'bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-950 dark:text-orange-300 dark:border-orange-800',
+      Tools:
+        'bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-950 dark:text-gray-300 dark:border-gray-800',
+      Other:
+        'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950 dark:text-indigo-300 dark:border-indigo-800',
 
-  // New categories with color suggestions
-  Business: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-300',
-  Movies: 'bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-300',
-  Music: 'bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-900 dark:text-fuchsia-300',
-  Sports: 'bg-lime-100 text-lime-800 dark:bg-lime-900 dark:text-lime-300',
-  Food: 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300',
-  Lifestyle: 'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300',
-  Gaming: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300',
-  Science: 'bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-300',
-  Technology: 'bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-300',
-  Art: 'bg-violet-100 text-violet-800 dark:bg-violet-900 dark:text-violet-300',
-  Fashion: 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300',
-  Photography: 'bg-neutral-100 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-300',
-  Health: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
-  Finance: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300',
-  Productivity: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
-  Travel: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
-};
+      // Enhanced categories with improved color combinations
+      Business:
+        'bg-cyan-50 text-cyan-700 border-cyan-200 dark:bg-cyan-950 dark:text-cyan-300 dark:border-cyan-800',
+      Movies:
+        'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950 dark:text-rose-300 dark:border-rose-800',
+      Music:
+        'bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200 dark:bg-fuchsia-950 dark:text-fuchsia-300 dark:border-fuchsia-800',
+      Sports:
+        'bg-lime-50 text-lime-700 border-lime-200 dark:bg-lime-950 dark:text-lime-300 dark:border-lime-800',
+      Food: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800',
+      Lifestyle:
+        'bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-950 dark:text-teal-300 dark:border-teal-800',
+      Gaming:
+        'bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-950 dark:text-violet-300 dark:border-violet-800',
+      Science:
+        'bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-950 dark:text-sky-300 dark:border-sky-800',
+      Technology:
+        'bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-950 dark:text-slate-300 dark:border-slate-800',
+      Art: 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950 dark:text-purple-300 dark:border-purple-800',
+      Fashion:
+        'bg-pink-50 text-pink-700 border-pink-200 dark:bg-pink-950 dark:text-pink-300 dark:border-pink-800',
+      Photography:
+        'bg-neutral-50 text-neutral-700 border-neutral-200 dark:bg-neutral-950 dark:text-neutral-300 dark:border-neutral-800',
+      Health:
+        'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800',
+      Finance:
+        'bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800',
+      Productivity:
+        'bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-950 dark:text-yellow-300 dark:border-yellow-800',
+      Travel:
+        'bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-950 dark:text-orange-300 dark:border-orange-800',
+
+      // New Anime category
+      Anime:
+        'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950 dark:text-indigo-300 dark:border-indigo-800',
+    };
 
     return colors[category] || colors['Other'];
   };
@@ -109,28 +140,30 @@ export function BookmarkCard({
           </Badge>
         </CardTitle>
         <CardDescription className="w-full" title={bookmark.url}>
-          {/* <Tooltip>
-            <TooltipTrigger className="w-full">
-              <p className="text-sm text-muted-foreground mb-4 line-clamp-2 bg-muted/30 p-1.5 rounded-lg overflow-hidden text-ellipsis whitespace-nowrap max-w-fit">
-                {bookmark.url}
-              </p>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{bookmark.url}</p>
-            </TooltipContent>
-          </Tooltip> */}
-
           <p className="text-sm text-muted-foreground mb-4 line-clamp-2 bg-muted/30 p-1.5 rounded-lg overflow-hidden text-ellipsis whitespace-nowrap max-w-fit">
             {bookmark.url}
           </p>
         </CardDescription>
       </CardHeader>
-      <CardContent className="">
-        {bookmark.description && (
-          <p className="text-sm text-muted-foreground mb-4 line-clamp-2 bg-muted/30 p-3 rounded-lg">
-            {bookmark.description}
-          </p>
-        )}
+      <CardContent className=" min-h-20 flex  flex-col justify-end">
+        <div className="w-full">
+          {bookmark.description && (
+            <Tooltip>
+              <TooltipTrigger asChild className="w-full">
+                <p className="text-sm w-full text-muted-foreground mb-4 line-clamp-2 bg-muted/30 p-1.5 rounded-lg overflow-hidden text-ellipsis whitespace-nowrap capitalize ">
+                  {bookmark?.description}
+                </p>
+              </TooltipTrigger>
+              {bookmark.description.length > 50 && (
+                <TooltipContent align="start" alignOffset={0}>
+                  <p className="line-clamp-5 max-w-3xs">
+                    {bookmark?.description}
+                  </p>
+                </TooltipContent>
+              )}
+            </Tooltip>
+          )}
+        </div>
         <div className="flex items-center justify-between gap-2">
           <div className="flex gap-2 justify-center sm:justify-end w-full flex-wrap">
             <Button

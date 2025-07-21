@@ -72,6 +72,7 @@ export const categories = [
   'Tools',
   'Business',
   'Movies',
+  'Anime',
   'Music',
   'Sports',
   'Food',
