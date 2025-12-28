@@ -45,7 +45,7 @@ const formSchema = z.object({
     .min(6, { message: 'Password must be at least 6 characters' }),
 });
 
-const SingIn = () => {
+const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
@@ -220,4 +220,4 @@ const SingIn = () => {
   );
 };
 
-export default SingIn;
+export default SignIn;
